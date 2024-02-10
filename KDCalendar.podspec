@@ -25,11 +25,12 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |ss|
     ss.source_files = "KDCalendar/CalendarView/**/*.{swift}"
-    ss.source_files = "KDCalendar/CalendarView/ImageCache/**/*.{h,m}"
+    ss.source_files = "KDCalendar/CalendarView/**/*.{h,m}"
   end
 
   s.subspec 'EventManager' do |ss|
     ss.source_files = "KDCalendar/CalendarView/**/*.{swift}"
+    ss.source_files = "KDCalendar/CalendarView/**/*.{h,m}"
     ss.pod_target_xcconfig = { 'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'KDCALENDAR_EVENT_MANAGER_ENABLED' }
   end
 
