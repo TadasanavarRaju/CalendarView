@@ -24,7 +24,6 @@
  */
 
 import UIKit
-import SDWebImage
 
 extension CalendarView: UICollectionViewDataSource {
     

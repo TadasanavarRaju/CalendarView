@@ -6,7 +6,6 @@ target 'CalendarView' do
   use_frameworks!
 
   # Pods for CalendarView
-  pod 'SDWebImage', '~> 5.0'
 
   target 'CalendarViewTests' do
     inherit! :search_paths
