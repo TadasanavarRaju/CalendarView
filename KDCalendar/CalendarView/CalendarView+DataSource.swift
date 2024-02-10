@@ -24,6 +24,7 @@
  */
 
 import UIKit
+import SDWebImage
 
 extension CalendarView: UICollectionViewDataSource {
     
@@ -97,7 +98,6 @@ extension CalendarView: UICollectionViewDataSource {
         
         let local = TimeZone(secondsFromGMT: TimeZone.current.secondsFromGMT())!
         let today = Date().convertToTimeZone(from: self.calendar.timeZone, to: local)
-        
         if (self.firstDayCache ... self.lastDayCache).contains(today) {
             
             let distanceFromTodayComponents = self.calendar.dateComponents([.month, .day], from: self.firstDayCache, to: today)
@@ -154,33 +154,28 @@ extension CalendarView: UICollectionViewDataSource {
         dayCell.clearStyles()
         
         dayCell.transform = _isRtl
-            ? CGAffineTransform(scaleX: -1.0, y: 1.0)
-            : CGAffineTransform.identity
+        ? CGAffineTransform(scaleX: -1.0, y: 1.0)
+        : CGAffineTransform.identity
         
         guard let (firstDayIndex, numberOfDaysTotal) = self.getCachedSectionInfo(indexPath.section) else { return dayCell }
         
         let lastDayIndex = firstDayIndex + numberOfDaysTotal
         
         let cellOutOfRange = { (indexPath: IndexPath) -> Bool in
-            
-            var isOutOfRange = false
-            
             if self.startIndexPath.section == indexPath.section { // is 0
-                isOutOfRange = self.startIndexPath.item + firstDayIndex > indexPath.item
+                return self.startIndexPath.item + firstDayIndex > indexPath.item
             }
-            if self.endIndexPath.section == indexPath.section && !isOutOfRange {
-                isOutOfRange = self.endIndexPath.item + firstDayIndex < indexPath.item
+            if self.endIndexPath.section == indexPath.section {
+                return self.endIndexPath.item + firstDayIndex < indexPath.item
             }
-            
-            return isOutOfRange
-            
+            return false
         }
         
         let isInRange = (firstDayIndex..<lastDayIndex).contains(indexPath.item)
         let isAdjacent = !isInRange && style.showAdjacentDays && (
             indexPath.item < firstDayIndex || indexPath.item >= lastDayIndex
         )
-    
+        
         // the index of this cell is within the range of first and the last day of the month
         if isInRange || isAdjacent {
             dayCell.isHidden = false
@@ -209,6 +204,7 @@ extension CalendarView: UICollectionViewDataSource {
         } else {
             dayCell.isHidden = true
             dayCell.textLabel.text = ""
+            
         }
         
         // hack: send once at the beginning
@@ -224,7 +220,18 @@ extension CalendarView: UICollectionViewDataSource {
             dayCell.isToday = (idx.section == indexPath.section && idx.item + firstDayIndex == indexPath.item)
         }
         
-        dayCell.isPicked = selectedIndexPaths.contains(indexPath)
+        dayCell.isSelected = selectedIndexPaths.contains(indexPath)
+        if selectedIndexPaths.contains(indexPath) {
+            //            dayCell.backgroundColor = #colorLiteral(red: 1, green: 0.4189037681, blue: 0.3933071196, alpha: 1)
+            dayCell.layer.borderColor = #colorLiteral(red: 1, green: 0.4189037681, blue: 0.3933071196, alpha: 1)
+            dayCell.layer.borderWidth = style.cellSelectedBorderWidth
+            dayCell.backgroundColor = style.cellSelectedColor
+            
+        } else {
+            dayCell.layer.borderColor = UIColor.clear.cgColor
+            dayCell.layer.borderWidth = 0
+            dayCell.backgroundColor = UIColor.white
+        }
         
         if self.marksWeekends {
             let we = indexPath.item % 7
@@ -233,9 +240,85 @@ extension CalendarView: UICollectionViewDataSource {
         }
         
         dayCell.eventsCount = self.eventsByIndexPath[indexPath]?.count ?? 0
+        if dayCell.eventsCount > 1 {
+            dayCell.eventCount.isHidden = false
+            dayCell.eventCount.layer.masksToBounds = true
+            dayCell.eventCount.layer.cornerRadius = dayCell.eventCount.bounds.width / 2
+            dayCell.eventCount.text = "\(dayCell.eventsCount)"
+        }else{
+            dayCell.eventCount.isHidden = true
+        }
+        
+        let eventsForDay = self.eventsByIndexPath[indexPath] ?? []
+        let infoEvents = eventsForDay.filter { !$0.eventDate.isEmpty }
+        dayCell.eventInfoView.isHidden = infoEvents.isEmpty
+        dayCell.dotsView.isHidden = infoEvents.count == eventsForDay.count
+        if eventsForDay.count > 0 {
+            let event = eventsForDay[0]
+            if event.eventDate.isEmpty {
+                let arr = event.title.components(separatedBy: ",")
+                let entityTypeId = arr[2]
+                if let url: URL = URL(string: event.imageUrl) {
+                    dayCell.dotsView.sd_setImage(with: url, placeholderImage: nil, options: .refreshCached)
+                    dayCell.dotsView.contentMode = .scaleAspectFill
+                } else {
+                    if entityTypeId == "1"{
+                        let placeholderImage = self.textToImage(drawText: arr[4].uppercased() as NSString)
+                        dayCell.dotsView.image = placeholderImage
+                    }else if entityTypeId == "2"{
+                        dayCell.dotsView.image = UIImage(named: "org_icon-1")
+                    }
+                }
+            }
+        }
+        
+        if eventsForDay.count > 1 {
+            let event = eventsForDay[1]
+            if event.eventDate.isEmpty {
+                let arr = event.title.components(separatedBy: ",")
+                let entityTypeId = arr[2]
+                if let url: URL = URL(string: event.imageUrl) {
+                    dayCell.dots1View.sd_setImage(with: url, placeholderImage: nil, options: .refreshCached)
+                    dayCell.dots1View.contentMode = .scaleAspectFill
+                } else {
+                    if entityTypeId == "1"{
+                        dayCell.dots1View.image = UIImage(named: "chronogram_logo_only")
+                    }else if entityTypeId == "2"{
+                        dayCell.dots1View.image = UIImage(named: "org_icon-1")
+                    }
+                }
+            }
+        }
+        
+        
+        
+        //            let imageUrl:NSURL = NSURL(string: "https://chronogram.us/app/api/profile/documents/1.jpg")!
+        
+        dayCell.showEventDot = self.multipleSelectionEnable
         
         return dayCell
     }
+    
+    func textToImage(drawText text: NSString) -> UIImage? {
+        //draw image first
+        let background = UIImage(named: "placeholder_background")
+        UIGraphicsBeginImageContext(background!.size)
+        background!.draw(in: CGRect(x: 0, y: 0, width: background!.size.width, height: background!.size.height))
+        
+        //text attributes
+        let font = UIFont(name: "Helvetica-Bold", size: 22)!
+        let text_style = NSMutableParagraphStyle()
+        text_style.alignment = NSTextAlignment.center
+        let text_color = UIColor.darkGray
+        let attributes = [NSAttributedString.Key.font:font, NSAttributedString.Key.paragraphStyle:text_style, NSAttributedString.Key.foregroundColor:text_color]
+
+        //vertically center (depending on font)
+        let text_h = font.lineHeight
+        let text_y = (background!.size.height-text_h)/2
+        let text_rect = CGRect(x: 0, y: text_y, width: background!.size.width, height: text_h)
+        text.draw(in: text_rect.integral, withAttributes: attributes)
+        let result = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return result
+    }
 }
-
-

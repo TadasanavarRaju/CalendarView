@@ -51,7 +51,7 @@ extension CalendarView {
         public var cellEventColor            = UIColor(red: 254.0/255.0, green: 73.0/255.0, blue: 64.0/255.0, alpha: 0.8)
         
         //Header
-        public var headerHeight: CGFloat     = 80.0
+        public var headerHeight: CGFloat     = 30.0
         public var headerTopMargin: CGFloat  = 5.0
         public var headerTextColor           = UIColor.gray
         public var headerBackgroundColor     = UIColor.white
@@ -59,33 +59,32 @@ extension CalendarView {
         
         public var weekdaysTopMargin: CGFloat     = 5.0
         public var weekdaysBottomMargin: CGFloat  = 5.0
-        public var weekdaysHeight: CGFloat        = 35.0
+        public var weekdaysHeight: CGFloat        = 20.0
         public var weekdaysTextColor              = UIColor.gray
         public var weekdaysBackgroundColor        = UIColor.white
-        public var weekdaysFont                   = UIFont.systemFont(ofSize: 14) // Used for days of the week
+        public var weekdaysFont                   = UIFont.systemFont(ofSize: 10) // Used for days of the week
         
         //Common
         public var cellShape                 = CellShapeOptions.bevel(4.0)
-        
         public var firstWeekday              = FirstWeekdayOptions.monday
         public var showAdjacentDays          = false
         
         //Default Style
         public var cellColorDefault          = UIColor(white: 0.0, alpha: 0.1)
-        public var cellTextColorDefault      = UIColor.gray
-        public var cellBorderColor           = UIColor.clear
+        public var cellTextColorDefault      = UIColor.black
+        public var cellBorderColor           = UIColor.green
         public var cellBorderWidth           = CGFloat(0.0)
-        public var cellFont                  = UIFont.systemFont(ofSize: 17)
+        public var cellFont                  = UIFont.systemFont(ofSize: 12)
         
         //Today Style
-        public var cellTextColorToday        = UIColor.gray
+
         public var cellColorToday            = UIColor(red: 254.0/255.0, green: 73.0/255.0, blue: 64.0/255.0, alpha: 0.3)
-        public var cellColorOutOfRange       = UIColor(white: 0.0, alpha: 0.5)
+        public var cellColorOutOfRange       = UIColor.gray
         public var cellColorAdjacent         = UIColor.clear
         
         //Selected Style
-        public var cellSelectedBorderColor   = UIColor(red: 254.0/255.0, green: 73.0/255.0, blue: 64.0/255.0, alpha: 0.8)
-        public var cellSelectedBorderWidth   = CGFloat(2.0)
+        public var cellSelectedBorderColor   = UIColor.red
+        public var cellSelectedBorderWidth   = CGFloat(1.0)
         public var cellSelectedColor         = UIColor.clear
         public var cellSelectedTextColor     = UIColor.black
         

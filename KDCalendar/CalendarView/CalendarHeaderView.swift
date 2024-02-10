@@ -45,7 +45,7 @@ open class CalendarHeaderView: UIView {
         monthLabel = UILabel()
         monthLabel.translatesAutoresizingMaskIntoConstraints = false
         monthLabel.backgroundColor = UIColor.clear
-        self.addSubview(monthLabel)
+//        self.addSubview(monthLabel)
         
         for _ in 0..<7 {
             let label = UILabel()
@@ -75,6 +75,7 @@ open class CalendarHeaderView: UIView {
             label.font = style.weekdaysFont
             label.text = style.weekDayTransform == .capitalized ? formatter.shortWeekdaySymbols[(index % 7)].capitalized : formatter.shortWeekdaySymbols[(index % 7)].uppercased()
             label.textColor = style.weekdaysTextColor
+            label.text = label.text!.uppercased()
             label.textAlignment = .center
             
             i = i + 1

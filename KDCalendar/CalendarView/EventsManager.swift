@@ -86,7 +86,8 @@ open class EventsManager {
             return CalendarEvent(
                 title:      $0.title,
                 startDate:  $0.startDate.addingTimeInterval(secondsFromGMTDifference),
-                endDate:    $0.endDate.addingTimeInterval(secondsFromGMTDifference)
+                endDate:    $0.endDate.addingTimeInterval(secondsFromGMTDifference),
+                eventId: 0
             )
         }
         

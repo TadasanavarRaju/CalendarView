@@ -34,27 +34,14 @@ extension CalendarView: UICollectionViewDelegateFlowLayout {
         if let index = selectedIndexPaths.firstIndex(of: indexPath) {
             
             delegate?.calendar(self, didDeselectDate: date)
-            if enableDeselection {
-                // bug: when deselecting the second to last item programmatically, during
-                // didDeselectDate delegation, the index returned is out of the bounds of
-                // the selectedIndexPaths array.  This guard prevents the crash
-                guard index < selectedIndexPaths.count, index < selectedDates.count else {
-                    return
-                }
+            if enableDeslection {
                 selectedIndexPaths.remove(at: index)
                 selectedDates.remove(at: index)
             }
             
         } else {
-            guard let currentCell = collectionView.cellForItem(at: indexPath) as? CalendarDayCell else {
-                selectedIndexPaths.append(indexPath)
-                selectedDates.append(date)
-                self.reloadData()
-                return
-            }
-
-            if currentCell.isOutOfRange || currentCell.isAdjacent {
-                self.reloadData()
+            if let currentCell = collectionView.cellForItem(at: indexPath) as? CalendarDayCell, currentCell.isOutOfRange || currentCell.isAdjacent {
+//                self.reloadData()
                 return
             }
             
@@ -65,13 +52,12 @@ extension CalendarView: UICollectionViewDelegateFlowLayout {
             
             selectedIndexPaths.append(indexPath)
             selectedDates.append(date)
-            currentCell.isPicked = true
             
             let eventsForDaySelected = eventsByIndexPath[indexPath] ?? []
             delegate?.calendar(self, didSelectDate: date, withEvents: eventsForDaySelected)
         }
         
-        self.reloadData()
+//        self.reloadData()
     }
     
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -101,6 +87,7 @@ extension CalendarView: UICollectionViewDelegateFlowLayout {
         guard let date = self.dateFromScrollViewPosition() else { return }
         
         self.displayDateOnHeader(date)
+        self.delegate?.calender(self, displayDateOnHeader: date)
         self.delegate?.calendar(self, didScrollToMonth: date)
         
     }
@@ -137,7 +124,7 @@ extension CalendarView: UICollectionViewDelegateFlowLayout {
         formatter.locale = style.locale
         formatter.timeZone = style.calendar.timeZone
         
-        let monthName = formatter.standaloneMonthSymbols[(month-1) % 12].capitalized // 0 indexed array
+        let monthName = formatter.monthSymbols[(month-1) % 12].capitalized // 0 indexed array
         
         let year = self.calendar.component(.year, from: date)
 

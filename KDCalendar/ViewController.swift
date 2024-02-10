@@ -50,7 +50,7 @@ class ViewController: UIViewController {
         style.headerTextColor          = UIColor.gray
         
         style.cellTextColorDefault     = UIColor(red: 249/255, green: 180/255, blue: 139/255, alpha: 1.0)
-        style.cellTextColorToday       = UIColor.orange
+       // style.cellTextColorToday       = UIColor.orange
         style.cellTextColorWeekend     = UIColor(red: 237/255, green: 103/255, blue: 73/255, alpha: 1.0)
         style.cellColorOutOfRange      = UIColor(red: 249/255, green: 226/255, blue: 212/255, alpha: 1.0)
             
@@ -195,7 +195,7 @@ extension ViewController: CalendarViewDelegate {
            
            let addEventAction = UIAlertAction(title: "Create", style: .default, handler: { (action) -> Void in
                let title = alert.textFields?.first?.text
-               self.calendarView.addEvent(title!, date: date)
+               self.calendarView.addEvent("", date: Date(), duration: 100, eventId: 100)
            })
            
            let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)

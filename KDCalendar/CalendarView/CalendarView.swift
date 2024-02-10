@@ -38,11 +38,22 @@ public struct CalendarEvent {
     public let title: String
     public let startDate: Date
     public let endDate:Date
-    
-    public init(title: String, startDate: Date, endDate: Date) {
-        self.title = title;
+    public let eventDate: String
+    public let eventId: Int
+    public let imageUrl: String
+    public init(title: String = "",
+                startDate: Date,
+                endDate: Date,
+                eventDate: String = "",
+                eventId: Int,
+                imageUrl: String = ""
+    ) {
+        self.title = title
         self.startDate = startDate;
         self.endDate = endDate;
+        self.eventDate = eventDate
+        self.eventId = eventId
+        self.imageUrl = imageUrl
     }
 }
 
@@ -63,21 +74,26 @@ extension CalendarViewDataSource {
     }
     
     func headerString(_ date: Date) -> String? {
-        return nil
+        return String()
     }
 }
 
 public protocol CalendarViewDelegate {
     
     func calendar(_ calendar : CalendarView, didScrollToMonth date : Date) -> Void
+    
     func calendar(_ calendar : CalendarView, didSelectDate date : Date, withEvents events: [CalendarEvent]) -> Void
     /* optional */
     func calendar(_ calendar : CalendarView, canSelectDate date : Date) -> Bool
     func calendar(_ calendar : CalendarView, didDeselectDate date : Date) -> Void
+    func calender(_ calender : CalendarView, displayDateOnHeader date : Date) -> Void
     func calendar(_ calendar : CalendarView, didLongPressDate date : Date, withEvents events: [CalendarEvent]?) -> Void
 }
 
 extension CalendarViewDelegate {
+    func calender(_ calender : CalendarView, displayDateOnHeader date : Date) -> Void{
+        return
+    }
     func calendar(_ calendar : CalendarView, canSelectDate date : Date) -> Bool { return true }
     func calendar(_ calendar : CalendarView, didDeselectDate date : Date) -> Void { return }
     func calendar(_ calendar : CalendarView, didLongPressDate date : Date, withEvents events: [CalendarEvent]?) -> Void { return }
@@ -127,7 +143,6 @@ public class CalendarView: UIView {
             
             for event in events {
                 guard let indexPath = self.indexPathForDate(event.startDate) else { continue }
-                
                 var eventsForIndexPath = eventsByIndexPath[indexPath] ?? []
                 eventsForIndexPath.append(event)
                 eventsByIndexPath[indexPath] = eventsForIndexPath
@@ -145,7 +160,7 @@ public class CalendarView: UIView {
     
     public internal(set) var displayDate: Date?
     public var multipleSelectionEnable = true
-    public var enableDeselection = true
+    public var enableDeslection = true
     public var marksWeekends = true
     
     public var delegate: CalendarViewDelegate?
@@ -198,7 +213,8 @@ public class CalendarView: UIView {
         layout.sectionInset = UIEdgeInsets.zero
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
-
+        layout.itemSize = self.cellSize(in: self.bounds)
+        
         /* Collection View */
         self.collectionView                     = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         self.collectionView.dataSource          = self
@@ -276,7 +292,10 @@ public class CalendarView: UIView {
     private func cellSize(in bounds: CGRect) -> CGSize {
         guard let collectionView = self.collectionView
             else {
-                return .zero
+                return CGSize(
+                    width: self.bounds.width / 7.0,
+                    height: self.bounds.width / 7.0
+                )
             }
         
         return CGSize(
@@ -410,19 +429,19 @@ extension CalendarView {
      function: - scroll calendar at date (month/year) passed as parameter.
      */
     public func setDisplayDate(_ date : Date, animated: Bool = false) {
-		if #available(iOS 10.0, *) {
-			guard
-				let startDate = calendar.dateInterval(of: .month, for: startDateCache)?.start,
-				let endDate = calendar.dateInterval(of: .month, for: endDateCache)?.end,
-				(startDate..<endDate).contains(date)
-			else {
-				return
-			}
-		}
-		else {
-			guard (startDateCache..<endDateCache).contains(date) else { return }
-		}
-		
+        if #available(iOS 10.0, *) {
+            guard
+                let startDate = calendar.dateInterval(of: .month, for: startDateCache)?.start,
+                let endDate = calendar.dateInterval(of: .month, for: endDateCache)?.end,
+                (startDate..<endDate).contains(date)
+            else {
+                return
+            }
+        }
+        else {
+            guard (startDateCache..<endDateCache).contains(date) else { return }
+        }
+        
         self.collectionView?.reloadData()
         self.collectionView?.setContentOffset(self.scrollViewOffset(for: date), animated: animated)
         self.displayDateOnHeader(date)
@@ -443,6 +462,19 @@ extension CalendarView {
             self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: UICollectionView.ScrollPosition())
         #endif
         self.collectionView(collectionView, didSelectItemAt: indexPath)
+    }
+    
+    public func selectMultipleDates(_ dates : [Date]) {
+        guard let indexPath = self.indexPathForDate(dates[0]) else { return }
+        
+        for index in 0..<dates.count {
+            guard let dateAdd = self.indexPathForDate(dates[index]) else { return }
+
+            self.collectionView.selectItem(at: dateAdd, animated: false, scrollPosition: UICollectionView.ScrollPosition())
+            self.collectionView(collectionView, didSelectItemAt: indexPath)
+
+        }
+
     }
     
     /*
@@ -473,17 +505,6 @@ extension CalendarView {
         goToMonthWithOffet(-1)
     }
 
-    /*
-     method: - clearAllSelectedDates
-     function: - clear all selected dates.  Does not call `didDeselectDate` callback
-     */
-    public func clearAllSelectedDates() {
-        selectedIndexPaths.removeAll()
-        selectedDates.removeAll()
-        self.reloadData()
-    }
-
-
     #if KDCALENDAR_EVENT_MANAGER_ENABLED
     
     public func loadEvents(onComplete: ((Error?) -> Void)? = nil) {
@@ -500,21 +521,21 @@ extension CalendarView {
         }
     }
     
-    @discardableResult public func addEvent(_ title: String, date startDate: Date, duration hours: NSInteger = 1) -> Bool {
+    @discardableResult public func addEvent(_ title: String, date startDate: Date, duration hours: NSInteger, eventDate: String = "", eventId: Int, imageUrl: String = "") -> Bool {
         
         var components = DateComponents()
-        components.hour = hours
+        components.hour = 1
         
         guard let endDate = self.calendar.date(byAdding: components, to: startDate) else {
             return false
         }
         
-        let event = CalendarEvent(title: title, startDate: startDate, endDate: endDate)
-        
-        guard EventsManager.add(event: event) else {
-            return false
-        }
-        
+        let event = CalendarEvent(title: title, startDate: startDate, endDate: endDate, eventDate: eventDate, eventId: eventId, imageUrl: imageUrl)
+//
+//        guard EventsManager.add(event: event) else {
+//            return false
+//        }
+//
         self.events.append(event)
         
         self.collectionView.reloadData()
