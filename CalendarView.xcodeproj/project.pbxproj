@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		001D468F2E10F2DD1143CEEC /* Pods_CalendarView_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41CC67B7C7171F79199D5CA7 /* Pods_CalendarView_iOS.framework */; };
 		390341B5D838900BA4600930 /* Pods_CalendarView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 771A994D8B95C04B45FA0B7C /* Pods_CalendarView.framework */; };
+		55757F4E2B77854200C76019 /* UIImage+ForceDecode.m in Sources */ = {isa = PBXBuildFile; fileRef = 55902E582B77817C001397D0 /* UIImage+ForceDecode.m */; };
 		55902E7B2B77817E001397D0 /* UIImage+Metadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 55902E082B778177001397D0 /* UIImage+Metadata.m */; };
 		55902E7C2B77817E001397D0 /* SDImageCoderHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 55902E092B778177001397D0 /* SDImageCoderHelper.m */; };
 		55902E7D2B77817E001397D0 /* SDImageCacheDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = 55902E0A2B778177001397D0 /* SDImageCacheDefine.m */; };
@@ -48,7 +49,6 @@
 		55902E9F2B77817E001397D0 /* NSButton+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 55902E552B77817C001397D0 /* NSButton+WebCache.m */; };
 		55902EA02B77817E001397D0 /* SDGraphicsImageRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 55902E562B77817C001397D0 /* SDGraphicsImageRenderer.m */; };
 		55902EA12B77817E001397D0 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 55902E572B77817C001397D0 /* UIView+WebCacheOperation.m */; };
-		55902EA22B77817E001397D0 /* UIImage+ForceDecode.m in Sources */ = {isa = PBXBuildFile; fileRef = 55902E582B77817C001397D0 /* UIImage+ForceDecode.m */; };
 		55902EA32B77817E001397D0 /* SDAnimatedImageRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 55902E5B2B77817C001397D0 /* SDAnimatedImageRep.m */; };
 		55902EA42B77817E001397D0 /* SDWebImageDownloaderResponseModifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 55902E5D2B77817C001397D0 /* SDWebImageDownloaderResponseModifier.m */; };
 		55902EA52B77817E001397D0 /* SDImageIOCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 55902E5F2B77817C001397D0 /* SDImageIOCoder.m */; };
@@ -560,7 +560,6 @@
 		BEFD65511ACC072000ADE917 /* KDCalendar */ = {
 			isa = PBXGroup;
 			children = (
-				55902E012B778124001397D0 /* ImageCache */,
 				BEFD65541ACC072000ADE917 /* AppDelegate.swift */,
 				BEFD65561ACC072000ADE917 /* ViewController.swift */,
 				BEFD65741ACC074A00ADE917 /* CalendarView */,
@@ -600,6 +599,7 @@
 		BEFD65741ACC074A00ADE917 /* CalendarView */ = {
 			isa = PBXGroup;
 			children = (
+				55902E012B778124001397D0 /* ImageCache */,
 				C7C16A6F1CBBE536004DC8CF /* CalendarView.swift */,
 				FC3FB289200F912000469B6B /* CalendarView+Style.swift */,
 				C7C16A6C1CBBE536004DC8CF /* CalendarDayCell.swift */,
@@ -864,7 +864,6 @@
 				55902EA12B77817E001397D0 /* UIView+WebCacheOperation.m in Sources */,
 				55902EDA2B7781AD001397D0 /* SDAsyncBlockOperation.m in Sources */,
 				55902EA62B77817E001397D0 /* SDWebImageError.m in Sources */,
-				55902EA22B77817E001397D0 /* UIImage+ForceDecode.m in Sources */,
 				55902E952B77817E001397D0 /* SDImageGraphics.m in Sources */,
 				55902E7F2B77817E001397D0 /* SDImageCodersManager.m in Sources */,
 				BEFD65551ACC072000ADE917 /* AppDelegate.swift in Sources */,
@@ -886,6 +885,7 @@
 				55902E982B77817E001397D0 /* SDWebImageDownloaderDecryptor.m in Sources */,
 				55902EB62B77817E001397D0 /* SDMemoryCache.m in Sources */,
 				55902ED92B7781AD001397D0 /* UIColor+SDHexString.m in Sources */,
+				55757F4E2B77854200C76019 /* UIImage+ForceDecode.m in Sources */,
 				55902E9B2B77817E001397D0 /* SDWebImageDownloaderOperation.m in Sources */,
 				C7EF3F4C1FA1D6F900C2DF2D /* EventsManager.swift in Sources */,
 				55902E8D2B77817E001397D0 /* SDImageHEICCoder.m in Sources */,
