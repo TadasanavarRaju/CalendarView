@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |ss|
     ss.source_files = "KDCalendar/CalendarView/**/*.{swift}"
-    ss.source_files = "KDCalendar/CalendarView/ImageCache/**/*.{h.m}"
+    ss.source_files = "KDCalendar/CalendarView/ImageCache/**/*.{h,m}"
   end
 
   s.subspec 'EventManager' do |ss|
