@@ -256,6 +256,7 @@ extension CalendarView: UICollectionViewDataSource {
         if eventsForDay.count > 0 {
             let event = eventsForDay[0]
             if event.eventDate.isEmpty {
+                dayCell.dotsView.isHidden = false
                 let arr = event.title.components(separatedBy: ",")
                 let entityTypeId = arr[2]
                 if let url: URL = URL(string: event.imageUrl) {
@@ -269,12 +270,17 @@ extension CalendarView: UICollectionViewDataSource {
                         dayCell.dotsView.image = UIImage(named: "org_icon-1")
                     }
                 }
+            } else {
+                dayCell.dotsView.isHidden = true
             }
+        } else {
+            dayCell.dotsView.isHidden = true
         }
         
         if eventsForDay.count > 1 {
             let event = eventsForDay[1]
             if event.eventDate.isEmpty {
+                dayCell.dots1View.isHidden = false
                 let arr = event.title.components(separatedBy: ",")
                 let entityTypeId = arr[2]
                 if let url: URL = URL(string: event.imageUrl) {
@@ -287,7 +293,11 @@ extension CalendarView: UICollectionViewDataSource {
                         dayCell.dots1View.image = UIImage(named: "org_icon-1")
                     }
                 }
+            } else {
+                dayCell.dots1View.isHidden = true
             }
+        } else {
+            dayCell.dots1View.isHidden = true
         }
         
         
