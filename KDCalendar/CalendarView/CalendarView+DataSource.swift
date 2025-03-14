@@ -260,7 +260,8 @@ extension CalendarView: UICollectionViewDataSource {
                 let arr = event.title.components(separatedBy: ",")
                 let entityTypeId = arr[2]
                 if let url: URL = URL(string: event.imageUrl) {
-                    dayCell.dotsView.sd_setImage(with: url, placeholderImage: nil, options: .refreshCached)
+                    dayCell.dotsView.sd_setImage(with: url, placeholderImage: nil,
+                                                 options: [.scaleDownLargeImages, .lowPriority, .continueInBackground])
                     dayCell.dotsView.contentMode = .scaleAspectFill
                 } else {
                     if entityTypeId == "1"{
@@ -284,7 +285,8 @@ extension CalendarView: UICollectionViewDataSource {
                 let arr = event.title.components(separatedBy: ",")
                 let entityTypeId = arr[2]
                 if let url: URL = URL(string: event.imageUrl) {
-                    dayCell.dots1View.sd_setImage(with: url, placeholderImage: nil, options: .refreshCached)
+                    dayCell.dots1View.sd_setImage(with: url, placeholderImage: nil,
+                                                  options: [.scaleDownLargeImages, .lowPriority, .continueInBackground])
                     dayCell.dots1View.contentMode = .scaleAspectFill
                 } else {
                     if entityTypeId == "1"{
