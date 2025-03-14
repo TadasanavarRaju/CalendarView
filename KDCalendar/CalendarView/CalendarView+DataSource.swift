@@ -259,9 +259,11 @@ extension CalendarView: UICollectionViewDataSource {
                 dayCell.dotsView.isHidden = false
                 let arr = event.title.components(separatedBy: ",")
                 let entityTypeId = arr[2]
+                let transformer = SDImageResizingTransformer(size: CGSize(width: 30, height: 30), scaleMode: .aspectFill)
                 if let url: URL = URL(string: event.imageUrl) {
                     dayCell.dotsView.sd_setImage(with: url, placeholderImage: nil,
-                                                 options: [.scaleDownLargeImages, .lowPriority, .continueInBackground])
+                                                 options: [.scaleDownLargeImages, .continueInBackground],
+                                                 context: [.imageTransformer: transformer])
                     dayCell.dotsView.contentMode = .scaleAspectFill
                 } else {
                     if entityTypeId == "1"{
