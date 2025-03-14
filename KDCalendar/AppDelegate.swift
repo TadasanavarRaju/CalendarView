@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         let imageCache = SDImageCache.shared.config
-        imageCache.maxDiskSize = 100 * 1024 * 1024 // 100MB Disk Cache
+        imageCache.maxDiskSize = 50 * 1024 * 1024 // 100MB Disk Cache
         imageCache.maxMemoryCost = 10 * 1024 * 1024 // 10MB Memory Cache
         imageCache.shouldCacheImagesInMemory = false // Reduce memory footprint
         imageCache.diskCacheExpireType = .accessDate // Remove least accessed images

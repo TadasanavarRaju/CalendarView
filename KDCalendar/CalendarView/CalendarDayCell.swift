@@ -171,6 +171,13 @@ open class CalendarDayCell: UICollectionViewCell {
     let bgView      = UIView()
     let eventInfoView  = UIView()
     
+    open override func prepareForReuse() {
+        super.prepareForReuse()
+        dotsView.image = nil // ✅ Clears old image reference
+        eventDot.image = nil // ✅ Clears old image reference
+        dots1View.image = nil // ✅ Clears old image reference
+    }
+    
     override init(frame: CGRect) {
         
         self.textLabel.textAlignment = NSTextAlignment.center
