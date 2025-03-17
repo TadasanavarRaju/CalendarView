@@ -24,6 +24,7 @@
  */
 
 import UIKit
+import SDWebImage
 #if KDCALENDAR_EVENT_MANAGER_ENABLED
 import EventKit
 #endif
@@ -185,6 +186,7 @@ public class CalendarView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setup()
+        self.setMemoryAllocation()
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -194,6 +196,20 @@ public class CalendarView: UIView {
     override open func awakeFromNib() {
         super.awakeFromNib()
         self.setup()
+        self.setMemoryAllocation()
+    }
+    
+    func setMemoryAllocation() {
+        let imageCache = SDImageCache.shared.config
+        imageCache.maxDiskSize = 50 * 1024 * 1024 // 50MB Disk Cache
+        imageCache.maxMemoryCost = 10 * 1024 * 1024 // 10MB Memory Cache
+        imageCache.shouldCacheImagesInMemory = false // Reduce memory footprint
+        imageCache.diskCacheExpireType = .accessDate // Remove least accessed images
+        imageCache.maxDiskAge = 60 * 60 * 24 * 7 // 1 Week Expiration
+        imageCache.shouldCacheImagesInMemory = true  // Enable memory caching
+        imageCache.shouldUseWeakMemoryCache = false  // Prevent retaining large images
+        
+
     }
     
     // MARK: Create Subviews
